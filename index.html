@@ -1694,7 +1694,7 @@ render();</div>
     prevBtn.disabled = current === 0;
     nextBtn.disabled = current === total - 1;
     // Save position
-    try { sessionStorage.setItem("slideIndex", current); } catch (e) {}
+    try { sessionStorage.setItem("slideIndex", current); } catch (e) { console.warn("sessionStorage unavailable:", e); }
   }
 
   function next() { goTo(current + 1); }
@@ -1717,6 +1717,8 @@ render();</div>
   prevBtn.addEventListener("click", prev);
   nextBtn.addEventListener("click", next);
 
+  var MIN_SWIPE_DISTANCE = 50;
+
   // Touch / swipe support
   var touchStartX = 0;
   var touchStartY = 0;
@@ -1727,7 +1729,7 @@ render();</div>
   document.addEventListener("touchend", function (e) {
     var dx = e.changedTouches[0].screenX - touchStartX;
     var dy = e.changedTouches[0].screenY - touchStartY;
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > MIN_SWIPE_DISTANCE) {
       if (dx < 0) next(); else prev();
     }
   });
