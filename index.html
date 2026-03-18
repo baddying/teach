@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML CSS JavaScript 前端教程</title>
+<style>
+/* ===== Reset & Base ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;font-family:"Microsoft YaHei","PingFang SC","Helvetica Neue",Arial,sans-serif}
+body{background:#1a1a2e}
+
+/* ===== Slide Container ===== */
+#slides{position:relative;width:100%;height:100%}
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:60px 80px;
+  opacity:0;visibility:hidden;
+  transition:opacity .5s ease,transform .5s ease;
+  transform:translateX(60px);
+  overflow-y:auto;
+}
+.slide.active{opacity:1;visibility:visible;transform:translateX(0)}
+.slide.prev{transform:translateX(-60px)}
+
+/* ===== Slide Themes ===== */
+.slide.theme-title{background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);color:#fff}
+.slide.theme-html{background:linear-gradient(135deg,#e44d26 0%,#f16529 100%);color:#fff}
+.slide.theme-css{background:linear-gradient(135deg,#264de4 0%,#2965f1 100%);color:#fff}
+.slide.theme-js{background:linear-gradient(135deg,#f0db4f 0%,#e8d44d 100%);color:#323330}
+.slide.theme-summary{background:linear-gradient(135deg,#11998e,#38ef7d);color:#fff}
+
+/* ===== Typography ===== */
+.slide h1{font-size:3em;margin-bottom:.3em;text-shadow:2px 2px 8px rgba(0,0,0,.3);text-align:center;line-height:1.3}
+.slide h2{font-size:2.2em;margin-bottom:.4em;text-align:center;line-height:1.3}
+.slide h3{font-size:1.5em;margin-bottom:.3em;opacity:.9}
+.slide p{font-size:1.15em;line-height:1.8;max-width:900px;text-align:left}
+.slide ul,.slide ol{font-size:1.1em;line-height:2;max-width:850px;text-align:left;padding-left:1.5em}
+.slide li{margin-bottom:.2em}
+.subtitle{font-size:1.4em;opacity:.85;margin-top:.2em;text-align:center}
+.emoji{font-size:1.3em}
+
+/* ===== Code Blocks ===== */
+.code-block{
+  background:rgba(0,0,0,.35);border-radius:12px;padding:24px 30px;
+  font-family:"Fira Code","Source Code Pro",Consolas,monospace;
+  font-size:.95em;line-height:1.7;max-width:880px;width:100%;
+  margin:16px 0;text-align:left;white-space:pre-wrap;word-break:break-all;
+  color:#f8f8f2;border:1px solid rgba(255,255,255,.1);
+  overflow-x:auto;
+}
+.theme-js .code-block{background:rgba(0,0,0,.7);color:#f8f8f2}
+
+/* ===== Tags / Badges ===== */
+.tag{display:inline-block;padding:4px 14px;border-radius:20px;font-size:.85em;margin:3px;font-weight:600}
+.tag-html{background:#e44d26;color:#fff}
+.tag-css{background:#264de4;color:#fff}
+.tag-js{background:#f0db4f;color:#323330}
+
+/* ===== Two-Column Layout ===== */
+.columns{display:flex;gap:40px;width:100%;max-width:950px;align-items:flex-start}
+.columns .col{flex:1}
+
+/* ===== Table ===== */
+.slide table{border-collapse:collapse;margin:12px 0;font-size:1em;max-width:880px;width:100%}
+.slide th,.slide td{border:1px solid rgba(255,255,255,.3);padding:10px 16px;text-align:left}
+.slide th{background:rgba(255,255,255,.15);font-weight:700}
+.theme-js th,.theme-js td{border-color:rgba(0,0,0,.2)}
+.theme-js th{background:rgba(0,0,0,.12)}
+
+/* ===== Navigation ===== */
+#nav{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:100;
+  display:flex;align-items:center;gap:12px;
+  background:rgba(0,0,0,.45);backdrop-filter:blur(10px);
+  padding:10px 24px;border-radius:40px;
+}
+#nav button{
+  width:40px;height:40px;border:none;border-radius:50%;
+  background:rgba(255,255,255,.15);color:#fff;font-size:1.2em;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .2s;
+}
+#nav button:hover{background:rgba(255,255,255,.3)}
+#nav button:disabled{opacity:.3;cursor:default}
+#counter{color:#fff;font-size:.95em;min-width:80px;text-align:center}
+
+/* ===== Progress Bar ===== */
+#progress{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,#38ef7d,#11998e);transition:width .4s;z-index:100}
+
+/* ===== Responsive ===== */
+@media(max-width:768px){
+  .slide{padding:30px 24px}
+  .slide h1{font-size:2em}
+  .slide h2{font-size:1.6em}
+  .slide p,.slide ul,.slide ol{font-size:1em}
+  .code-block{font-size:.82em;padding:16px}
+  .columns{flex-direction:column;gap:16px}
+  #nav{padding:8px 16px}
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<div id="slides">
+
+<!-- ==================== Slide 1: Title ==================== -->
+<div class="slide theme-title active" data-index="0">
+  <h1>📚 HTML CSS JavaScript<br>前端开发教程</h1>
+  <p class="subtitle">从零开始，系统学习 Web 前端三大核心技术</p>
+  <p style="margin-top:20px;text-align:center;opacity:.7">共 60 页 · 使用 ← → 键或底部按钮翻页</p>
+  <div style="margin-top:18px">
+    <span class="tag tag-html">HTML</span>
+    <span class="tag tag-css">CSS</span>
+    <span class="tag tag-js">JavaScript</span>
+  </div>
+</div>
+
+<!-- ==================== Slide 2: Outline ==================== -->
+<div class="slide theme-title" data-index="1">
+  <h2>📋 课程大纲</h2>
+  <div class="columns" style="margin-top:20px">
+    <div class="col">
+      <h3><span class="tag tag-html">Part 1</span> HTML 基础</h3>
+      <ul>
+        <li>HTML 文档结构</li>
+        <li>常用标签与属性</li>
+        <li>表单与输入</li>
+        <li>语义化与 HTML5</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3><span class="tag tag-css">Part 2</span> CSS 样式</h3>
+      <ul>
+        <li>选择器与盒模型</li>
+        <li>布局方式 (Flex / Grid)</li>
+        <li>响应式设计</li>
+        <li>动画与过渡</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3><span class="tag tag-js">Part 3</span> JavaScript</h3>
+      <ul>
+        <li>语法与数据类型</li>
+        <li>函数与对象</li>
+        <li>DOM 与事件</li>
+        <li>ES6+ 与异步编程</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Slide 3: What is HTML ==================== -->
+<div class="slide theme-html" data-index="2">
+  <h2>🌐 什么是 HTML？</h2>
+  <ul style="margin-top:16px">
+    <li><strong>HTML</strong> = HyperText Markup Language（超文本标记语言）</li>
+    <li>它是构建网页的<strong>骨架</strong>，定义页面的内容和结构</li>
+    <li>浏览器读取 HTML 文件，将其渲染为可视的网页</li>
+    <li>当前标准版本：<strong>HTML5</strong></li>
+  </ul>
+  <div class="code-block">&lt;!-- 这是一个简单的HTML标签示例 --&gt;
+&lt;h1&gt;你好，世界！&lt;/h1&gt;
+&lt;p&gt;这是我的第一个网页。&lt;/p&gt;</div>
+</div>
+
+<!-- ==================== Slide 4: HTML Structure ==================== -->
+<div class="slide theme-html" data-index="3">
+  <h2>📄 HTML 基本结构</h2>
+  <div class="code-block">&lt;!DOCTYPE html&gt;
+&lt;html lang="zh-CN"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;页面标题&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;欢迎来到我的网站&lt;/h1&gt;
+    &lt;p&gt;这是页面内容。&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div>
+  <ul>
+    <li><code>&lt;!DOCTYPE html&gt;</code> — 声明文档类型为 HTML5</li>
+    <li><code>&lt;head&gt;</code> — 包含元数据（标题、编码、样式等）</li>
+    <li><code>&lt;body&gt;</code> — 包含页面可见内容</li>
+  </ul>
+</div>
+
+<!-- ==================== Slide 5: Tags Overview ==================== -->
+<div class="slide theme-html" data-index="4">
+  <h2>🏷️ HTML 标签概述</h2>
+  <p>HTML 标签通常成对出现：开始标签 + 内容 + 结束标签</p>
+  <div class="code-block">&lt;!-- 成对标签 --&gt;
+&lt;p&gt;这是一段文字&lt;/p&gt;
+
+&lt;!-- 自闭合标签 --&gt;
+&lt;br&gt;      &lt;!-- 换行 --&gt;
+&lt;hr&gt;      &lt;!-- 水平线 --&gt;
+&lt;img src="photo.jpg" alt="图片"&gt;</div>
+  <table style="margin-top:10px">
+    <tr><th>类型</th><th>说明</th><th>示例</th></tr>
+    <tr><td>块级元素</td><td>独占一行</td><td>&lt;div&gt;, &lt;p&gt;, &lt;h1&gt;</td></tr>
+    <tr><td>行内元素</td><td>不换行</td><td>&lt;span&gt;, &lt;a&gt;, &lt;strong&gt;</td></tr>
+    <tr><td>自闭合</td><td>无结束标签</td><td>&lt;br&gt;, &lt;img&gt;, &lt;input&gt;</td></tr>
+  </table>
+</div>
+
+<!-- ==================== Slide 6: Headings ==================== -->
+<div class="slide theme-html" data-index="5">
+  <h2>📝 标题标签 h1 ~ h6</h2>
+  <p>HTML 提供 6 级标题，h1 最大，h6 最小：</p>
+  <div class="code-block">&lt;h1&gt;一级标题（最重要）&lt;/h1&gt;
+&lt;h2&gt;二级标题&lt;/h2&gt;
+&lt;h3&gt;三级标题&lt;/h3&gt;
+&lt;h4&gt;四级标题&lt;/h4&gt;
+&lt;h5&gt;五级标题&lt;/h5&gt;
+&lt;h6&gt;六级标题（最小）&lt;/h6&gt;</div>
+  <ul>
+    <li>每个页面应该只有<strong>一个 h1</strong>（SEO 最佳实践）</li>
+    <li>标题层级应该<strong>依次递进</strong>，不要跳级</li>
+    <li>不要用标题标签仅仅为了加粗或放大文字</li>
+  </ul>
+</div>
+
+<!-- ==================== Slide 7: Text Tags ==================== -->
+<div class="slide theme-html" data-index="6">
+  <h2>✏️ 段落与文本标签</h2>
+  <div class="code-block">&lt;p&gt;这是一个段落。&lt;/p&gt;
+
+&lt;strong&gt;加粗文本&lt;/strong&gt;
+&lt;em&gt;斜体文本&lt;/em&gt;
+&lt;u&gt;下划线文本&lt;/u&gt;
+&lt;del&gt;删除线文本&lt;/del&gt;
+&lt;mark&gt;高亮文本&lt;/mark&gt;
+
+&lt;br&gt;  &lt;!-- 换行 --&gt;
+&lt;hr&gt;  &lt;!-- 水平分割线 --&gt;
+
+&lt;blockquote&gt;这是引用文本&lt;/blockquote&gt;
+&lt;code&gt;这是行内代码&lt;/code&gt;
+&lt;pre&gt;这是预格式化文本&lt;/pre&gt;</div>
+</div>
+
+<!-- ==================== Slide 8: Links ==================== -->
+<div class="slide theme-html" data-index="7">
+  <h2>🔗 链接标签 &lt;a&gt;</h2>
+  <div class="code-block">&lt;!-- 基本链接 --&gt;
+&lt;a href="https://www.example.com"&gt;访问示例网站&lt;/a&gt;
+
+&lt;!-- 新窗口打开 --&gt;
+&lt;a href="https://www.example.com" target="_blank"&gt;新窗口打开&lt;/a&gt;
+
+&lt;!-- 页内锚点 --&gt;
+&lt;a href="#section2"&gt;跳转到第二节&lt;/a&gt;
+&lt;h2 id="section2"&gt;第二节&lt;/h2&gt;
+
+&lt;!-- 邮件链接 --&gt;
+&lt;a href="mailto:hello@example.com"&gt;发送邮件&lt;/a&gt;
+
+&lt;!-- 电话链接 --&gt;
+&lt;a href="tel:+8613800138000"&gt;拨打电话&lt;/a&gt;</div>
+</div>
+
+<!-- ==================== Slide 9: Images ==================== -->
+<div class="slide theme-html" data-index="8">
+  <h2>🖼️ 图片标签 &lt;img&gt;</h2>
+  <div class="code-block">&lt;!-- 基本用法 --&gt;
+&lt;img src="image.jpg" alt="图片描述"&gt;
+
+&lt;!-- 设置宽高 --&gt;
+&lt;img src="photo.png" alt="照片" width="300" height="200"&gt;
+
+&lt;!-- 图片与说明 --&gt;
+&lt;figure&gt;
+    &lt;img src="chart.png" alt="数据图表"&gt;
+    &lt;figcaption&gt;图1：2024年销售数据&lt;/figcaption&gt;
+&lt;/figure&gt;</div>
+  <ul>
+    <li><code>src</code> — 图片路径（必需）</li>
+    <li><code>alt</code> — 替代文本，图片无法显示时展示（必需，利于无障碍访问和 SEO）</li>
+    <li>支持格式：JPG、PNG、GIF、SVG、WebP 等</li>
+  </ul>
+</div>
+
+<!-- ==================== Slide 10: Lists ==================== -->
+<div class="slide theme-html" data-index="9">
+  <h2>📃 列表标签</h2>
+  <div class="columns">
+    <div class="col">
+      <h3>无序列表</h3>
+      <div class="code-block">&lt;ul&gt;
+  &lt;li&gt;苹果&lt;/li&gt;
+  &lt;li&gt;香蕉&lt;/li&gt;
+  &lt;li&gt;橙子&lt;/li&gt;
+&lt;/ul&gt;</div>
+    </div>
+    <div class="col">
+      <h3>有序列表</h3>
+      <div class="code-block">&lt;ol&gt;
+  &lt;li&gt;第一步&lt;/li&gt;
+  &lt;li&gt;第二步&lt;/li&gt;
+  &lt;li&gt;第三步&lt;/li&gt;
+&lt;/ol&gt;</div>
+    </div>
+  </div>
+  <h3 style="margin-top:12px">描述列表</h3>
+  <div class="code-block">&lt;dl&gt;
+  &lt;dt&gt;HTML&lt;/dt&gt;
+  &lt;dd&gt;超文本标记语言&lt;/dd&gt;
+  &lt;dt&gt;CSS&lt;/dt&gt;
+  &lt;dd&gt;层叠样式表&lt;/dd&gt;
+&lt;/dl&gt;</div>
+</div>
+
+<!-- ==================== Slide 11: Tables ==================== -->
+<div class="slide theme-html" data-index="10">
+  <h2>📊 表格标签</h2>
+  <div class="code-block">&lt;table border="1"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;姓名&lt;/th&gt;
+      &lt;th&gt;年龄&lt;/th&gt;
+      &lt;th&gt;城市&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;小明&lt;/td&gt;
+      &lt;td&gt;25&lt;/td&gt;
+      &lt;td&gt;北京&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;小红&lt;/td&gt;
+      &lt;td&gt;23&lt;/td&gt;
+      &lt;td&gt;上海&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</div>
+  <ul>
+    <li><code>&lt;thead&gt;</code> 表头 · <code>&lt;tbody&gt;</code> 表体 · <code>&lt;tfoot&gt;</code> 表尾</li>
+    <li><code>&lt;th&gt;</code> 表头单元格 · <code>&lt;td&gt;</code> 普通单元格</li>
+    <li>可用 <code>colspan</code> / <code>rowspan</code> 合并单元格</li>
+  </ul>
+</div>
+
+<!-- ==================== Slide 12: Forms ==================== -->
+<div class="slide theme-html" data-index="11">
+  <h2>📝 表单标签 &lt;form&gt;</h2>
+  <div class="code-block">&lt;form action="/submit" method="POST"&gt;
+  &lt;label for="name"&gt;姓名：&lt;/label&gt;
+  &lt;input type="text" id="name" name="name" required&gt;
+
+  &lt;label for="email"&gt;邮箱：&lt;/label&gt;
+  &lt;input type="email" id="email" name="email"&gt;
+
+  &lt;label for="msg"&gt;留言：&lt;/label&gt;
+  &lt;textarea id="msg" name="message" rows="4"&gt;&lt;/textarea&gt;
+
+  &lt;button type="submit"&gt;提交&lt;/button&gt;
+&lt;/form&gt;</div>
+  <ul>
+    <li><code>action</code> — 表单提交的 URL</li>
+    <li><code>method</code> — GET（查询）/ POST（提交数据）</li>
+    <li><code>&lt;label&gt;</code> 的 <code>for</code> 属性应与 <code>&lt;input&gt;</code> 的 <code>id</code> 对应</li>
+  </ul>
+</div>
+
+<!-- ==================== Slide 13: Input Types ==================== -->
+<div class="slide theme-html" data-index="12">
+  <h2>⌨️ 常用输入类型</h2>
+  <div class="code-block">&lt;input type="text"     placeholder="文本输入"&gt;
+&lt;input type="password" placeholder="密码"&gt;
+&lt;input type="email"    placeholder="邮箱"&gt;
+&lt;input type="number"   min="0" max="100"&gt;
+&lt;input type="date"&gt;
+&lt;input type="color"&gt;
+&lt;input type="range"    min="0" max="100"&gt;
+&lt;input type="file"&gt;
+&lt;input type="checkbox"&gt; 复选框
+&lt;input type="radio" name="gender"&gt; 单选按钮
+
+&lt;select&gt;
+  &lt;option value="a"&gt;选项 A&lt;/option&gt;
+  &lt;option value="b"&gt;选项 B&lt;/option&gt;
+&lt;/select&gt;</div>
+</div>
+
+<!-- ==================== Slide 14: div & span ==================== -->
+<div class="slide theme-html" data-index="13">
+  <h2>📦 div 与 span</h2>
+  <div class="columns">
+    <div class="col">
+      <h3>&lt;div&gt; — 块级容器</h3>
+      <div class="code-block">&lt;div class="card"&gt;
+  &lt;h3&gt;卡片标题&lt;/h3&gt;
+  &lt;p&gt;卡片内容...&lt;/p&gt;
+&lt;/div&gt;</div>
+      <ul>
+        <li>块级元素，独占一行</li>
+        <li>用于<strong>分组与布局</strong></li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>&lt;span&gt; — 行内容器</h3>
+      <div class="code-block">&lt;p&gt;
+  价格：
+  &lt;span class="price"&gt;¥99&lt;/span&gt;
+&lt;/p&gt;</div>
+      <ul>
+        <li>行内元素，不换行</li>
+        <li>用于<strong>标记文本片段</strong></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Slide 15: Semantic Tags ==================== -->
+<div class="slide theme-html" data-index="14">
+  <h2>🏗️ 语义化标签</h2>
+  <p>使用有意义的标签，提高代码可读性与 SEO 效果：</p>
+  <div class="code-block">&lt;header&gt;    页面/区域头部      &lt;/header&gt;
+&lt;nav&gt;       导航栏              &lt;/nav&gt;
+&lt;main&gt;      页面主要内容        &lt;/main&gt;
+&lt;article&gt;   独立的文章内容      &lt;/article&gt;
+&lt;section&gt;   内容分区            &lt;/section&gt;
+&lt;aside&gt;     侧边栏              &lt;/aside&gt;
+&lt;footer&gt;    页面/区域底部      &lt;/footer&gt;</div>
+  <ul>
+    <li>✅ 对 SEO 友好，搜索引擎更易理解页面结构</li>
+    <li>✅ 提升<strong>无障碍访问</strong>体验（屏幕阅读器）</li>
+    <li>✅ 代码更<strong>易读易维护</strong></li>
+  </ul>
+</div>
+
+<!-- ==================== Slide 16: HTML5 Features ==================== -->
+<div class="slide theme-html" data-index="15">
+  <h2>🚀 HTML5 新特性</h2>
+  <div class="columns">
+    <div class="col">
+      <h3>新增元素</h3>
+      <ul>
+        <li><code>&lt;header&gt;</code> / <code>&lt;footer&gt;</code></li>
+        <li><code>&lt;nav&gt;</code> / <code>&lt;aside&gt;</code></li>
+        <li><code>&lt;article&gt;</code> / <code>&lt;section&gt;</code></li>
+        <li><code>&lt;video&gt;</code> / <code>&lt;audio&gt;</code></li>
+        <li><code>&lt;canvas&gt;</code> — 绘图</li>
+        <li><code>&lt;details&gt;</code> / <code>&lt;summary&gt;</code></li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>新增 API</h3>
+      <ul>
+        <li>本地存储 (localStorage)</li>
+        <li>地理定位 (Geolocation)</li>
+        <li>拖放 (Drag &amp; Drop)</li>
+        <li>Web Workers</li>
+        <li>WebSocket</li>
+        <li>Canvas 2D / WebGL</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Slide 17: Audio & Video ==================== -->
+<div class="slide theme-html" data-index="16">
+  <h2>🎬 音频与视频标签</h2>
+  <div class="code-block">&lt;!-- 视频 --&gt;
+&lt;video src="movie.mp4" controls width="600"&gt;
+    您的浏览器不支持 video 标签。
+&lt;/video&gt;
+
+&lt;!-- 多格式兼容 --&gt;
+&lt;video controls&gt;
+    &lt;source src="movie.mp4"  type="video/mp4"&gt;
+    &lt;source src="movie.webm" type="video/webm"&gt;
+&lt;/video&gt;
+
+&lt;!-- 音频 --&gt;
+&lt;audio src="song.mp3" controls&gt;&lt;/audio&gt;</div>
+  <ul>
+    <li><code>controls</code> — 显示播放控件</li>
+    <li><code>autoplay</code> — 自动播放（大多数浏览器需配合 muted）</li>
+    <li><code>loop</code> — 循环播放</li>
+    <li><code>muted</code> — 静音</li>
+  </ul>
+</div>
+
+<!-- ==================== Slide 18: Attributes ==================== -->
+<div class="slide theme-html" data-index="17">
+  <h2>🔧 HTML 常用属性</h2>
+  <table>
+    <tr><th>属性</th><th>说明</th><th>示例</th></tr>
+    <tr><td>id</td><td>唯一标识符</td><td>&lt;div id="app"&gt;</td></tr>
+    <tr><td>class</td><td>类名（可多个）</td><td>&lt;p class="text bold"&gt;</td></tr>
+    <tr><td>style</td><td>内联样式</td><td>&lt;p style="color:red"&gt;</td></tr>
+    <tr><td>title</td><td>鼠标悬停提示</td><td>&lt;a title="首页"&gt;</td></tr>
+    <tr><td>hidden</td><td>隐藏元素</td><td>&lt;div hidden&gt;</td></tr>
+    <tr><td>data-*</td><td>自定义数据属性</td><td>&lt;div data-id="123"&gt;</td></tr>
+    <tr><td>placeholder</td><td>输入框占位文本</td><td>&lt;input placeholder="请输入"&gt;</td></tr>
+    <tr><td>disabled</td><td>禁用表单元素</td><td>&lt;button disabled&gt;</td></tr>
+  </table>
+</div>
+
+<!-- ==================== Slide 19: HTML Practice ==================== -->
+<div class="slide theme-html" data-index="18">
+  <h2>💻 HTML 实战练习</h2>
+  <p>试着编写一个包含以下内容的个人简介页面：</p>
+  <div class="code-block">&lt;!DOCTYPE html&gt;
+&lt;html lang="zh-CN"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;我的个人简介&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;张三&lt;/h1&gt;
+    &lt;p&gt;前端开发工程师&lt;/p&gt;
+  &lt;/header&gt;
+  &lt;main&gt;
+    &lt;section&gt;
+      &lt;h2&gt;技能清单&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;HTML5 &amp; CSS3&lt;/li&gt;
+        &lt;li&gt;JavaScript / TypeScript&lt;/li&gt;
+        &lt;li&gt;Vue.js / React&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/section&gt;
+    &lt;section&gt;
+      &lt;h2&gt;联系方式&lt;/h2&gt;
+      &lt;p&gt;邮箱：&lt;a href="mailto:test@example.com"&gt;test@example.com&lt;/a&gt;&lt;/p&gt;
+    &lt;/section&gt;
+  &lt;/main&gt;
+  &lt;footer&gt;&lt;p&gt;&amp;copy; 2024 张三&lt;/p&gt;&lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div>
+</div>
+
+<!-- ==================== Slide 20: HTML Summary ==================== -->
+<div class="slide theme-html" data-index="19">
+  <h2>✅ HTML 小结</h2>
+  <div class="columns">
+    <div class="col">
+      <h3>学到了什么</h3>
+      <ul>
+        <li>HTML 文档基本结构</li>
+        <li>标题、段落、文本格式化</li>
+        <li>链接与图片</li>
+        <li>列表与表格</li>
+        <li>表单与输入类型</li>
+        <li>语义化标签</li>
+        <li>HTML5 新特性</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>最佳实践</h3>
+      <ul>
+        <li>始终使用 <code>&lt;!DOCTYPE html&gt;</code></li>
+        <li>图片务必添加 <code>alt</code> 属性</li>
+        <li>使用语义化标签代替无意义的 div</li>
+        <li>保持代码缩进整洁</li>
+        <li>通过 W3C 验证器检查代码</li>
+      </ul>
+    </div>
+  </div>
+  <p style="text-align:center;margin-top:20px;font-size:1.3em">接下来进入 <span class="tag tag-css">CSS 样式</span> 部分 →</p>
+</div>
+
+<!-- ==================== Slide 21: What is CSS ==================== -->
+<div class="slide theme-css" data-index="20">
+  <h2>🎨 什么是 CSS？</h2>
+  <ul>
+    <li><strong>CSS</strong> = Cascading Style Sheets（层叠样式表）</li>
+    <li>负责网页的<strong>外观与布局</strong>（颜色、字体、间距、动画等）</li>
+    <li>将<strong>内容（HTML）</strong>与<strong>表现（CSS）</strong>分离</li>
+    <li>当前标准版本：<strong>CSS3</strong></li>
+  </ul>
+  <div class="code-block">/* 选择器 { 属性: 值; } */
+h1 {
+    color: #e44d26;
+    font-size: 2em;
+    text-align: center;
+}</div>
+</div>
+
+<!-- ==================== Slide 22: CSS Import ==================== -->
+<div class="slide theme-css" data-index="21">
+  <h2>📎 CSS 引入方式</h2>
+  <div class="code-block">/* 1. 外部样式表（推荐） */
+&lt;link rel="stylesheet" href="style.css"&gt;
+
+/* 2. 内部样式表 */
+&lt;style&gt;
+  body { background: #f0f0f0; }
+&lt;/style&gt;
+
+/* 3. 内联样式（不推荐） */
+&lt;p style="color: red; font-size: 16px;"&gt;红色文字&lt;/p&gt;</div>
+  <table style="margin-top:10px">
+    <tr><th>方式</th><th>优点</th><th>缺点</th></tr>
+    <tr><td>外部样式表</td><td>可复用、易维护</td><td>需额外请求</td></tr>
+    <tr><td>内部样式表</td><td>无需额外文件</td><td>只作用于当前页面</td></tr>
+    <tr><td>内联样式</td><td>优先级最高</td><td>难维护、不可复用</td></tr>
+  </table>
+</div>
+
+<!-- ==================== Slide 23: Selectors Basics ==================== -->
+<div class="slide theme-css" data-index="22">
+  <h2>🎯 CSS 选择器基础</h2>
+  <div class="code-block">/* 元素选择器 */
+p { color: #333; }
+
+/* 类选择器 */
+.highlight { background: yellow; }
+
+/* ID 选择器 */
+#header { height: 80px; }
+
+/* 通配符选择器 */
+* { margin: 0; padding: 0; }
+
+/* 属性选择器 */
+input[type="text"] { border: 1px solid #ccc; }
+
+/* 组合选择器 */
+h1, h2, h3 { font-family: "微软雅黑"; }</div>
+</div>
+
+<!-- ==================== Slide 24: Advanced Selectors ==================== -->
+<div class="slide theme-css" data-index="23">
+  <h2>🎯 高级选择器</h2>
+  <div class="code-block">/* 后代选择器（空格） */
+.nav a { color: white; }
+
+/* 子选择器（>） */
+.nav > li { display: inline-block; }
+
+/* 相邻兄弟选择器（+） */
+h2 + p { font-size: 1.2em; }
+
+/* 伪类选择器 */
+a:hover { color: red; }
+li:first-child { font-weight: bold; }
+li:nth-child(2n) { background: #f5f5f5; }
+
+/* 伪元素选择器 */
+p::first-line { font-weight: bold; }
+.quote::before { content: "\201C"; }</div>
+</div>
+
+<!-- ==================== Slide 25: Colors & Backgrounds ==================== -->
+<div class="slide theme-css" data-index="24">
+  <h2>🌈 颜色与背景</h2>
+  <div class="code-block">/* 颜色表示法 */
+color: red;                    /* 颜色名 */
+color: #ff6600;                /* 十六进制 */
+color: rgb(255, 102, 0);      /* RGB */
+color: rgba(255, 102, 0, 0.8);/* RGBA（带透明度） */
+color: hsl(24, 100%, 50%);    /* HSL */
+
+/* 背景 */
+background-color: #f0f0f0;
+background-image: url('bg.jpg');
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+
+/* 渐变 */
+background: linear-gradient(135deg, #667eea, #764ba2);
+background: radial-gradient(circle, #ff9a9e, #fecfef);</div>
+</div>
+
+<!-- ==================== Slide 26: Font & Text ==================== -->
+<div class="slide theme-css" data-index="25">
+  <h2>🔤 字体与文本样式</h2>
+  <div class="code-block">/* 字体 */
+font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+font-size: 16px;        /* 也可用 em, rem, vw */
+font-weight: bold;      /* 100 ~ 900 */
+font-style: italic;
+
+/* 文本 */
+text-align: center;     /* left | right | center | justify */
+text-decoration: underline;
+text-transform: uppercase;
+text-indent: 2em;       /* 首行缩进 */
+line-height: 1.6;       /* 行高 */
+letter-spacing: 2px;    /* 字间距 */
+word-spacing: 4px;      /* 词间距 */
+text-shadow: 2px 2px 4px rgba(0,0,0,.3);</div>
+</div>
+
+<!-- ==================== Slide 27: Box Model ==================== -->
+<div class="slide theme-css" data-index="26">
+  <h2>📦 CSS 盒模型</h2>
+  <p>每个 HTML 元素都是一个"盒子"，由 4 层组成：</p>
+  <div class="code-block">┌─────────────────────────── margin ──────────────────────────┐
+│  ┌───────────────────── border ─────────────────────────┐   │
+│  │  ┌─────────────── padding ───────────────────┐       │   │
+│  │  │                                           │       │   │
+│  │  │            content (内容区)                │       │   │
+│  │  │                                           │       │   │
+│  │  └───────────────────────────────────────────┘       │   │
+│  └──────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+
+/* 标准盒模型：width = content 宽度 */
+box-sizing: content-box;
+
+/* 替代盒模型（推荐）：width = content + padding + border */
+box-sizing: border-box;</div>
+</div>
+
+<!-- ==================== Slide 28: Margin & Padding ==================== -->
+<div class="slide theme-css" data-index="27">
+  <h2>📐 margin 与 padding</h2>
+  <div class="code-block">/* margin — 外边距（元素与外部的距离） */
+margin: 20px;                /* 四周 20px */
+margin: 10px 20px;           /* 上下 10px，左右 20px */
+margin: 10px 20px 30px 40px; /* 上 右 下 左（顺时针） */
+margin: 0 auto;              /* 水平居中 */
+
+/* padding — 内边距（内容与边框的距离） */
+padding: 16px;
+padding: 8px 16px;
+padding-top: 10px;
+padding-left: 20px;</div>
+  <ul>
+    <li>margin 可以为<strong>负值</strong>，padding 不可以</li>
+    <li>相邻块级元素的垂直 margin 会<strong>合并</strong>（取较大值）</li>
+    <li><code>margin: 0 auto</code> 可实现块级元素<strong>水平居中</strong></li>
+  </ul>
+</div>
+
+<!-- ==================== Slide 29: Border ==================== -->
+<div class="slide theme-css" data-index="28">
+  <h2>🔲 边框样式</h2>
+  <div class="code-block">/* 基本边框 */
+border: 1px solid #333;
+border-width: 2px;
+border-style: solid;   /* solid | dashed | dotted | double | none */
+border-color: #e44d26;
+
+/* 单侧边框 */
+border-top: 3px solid red;
+border-bottom: 1px dashed #ccc;
+
+/* 圆角 */
+border-radius: 8px;
+border-radius: 50%;    /* 圆形 */
+border-radius: 20px 0 20px 0; /* 对角圆角 */
+
+/* 轮廓（不占空间） */
+outline: 2px solid blue;
+outline-offset: 4px;
+
+/* 阴影 */
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);</div>
+</div>
+
+<!-- ==================== Slide 30: Display ==================== -->
+<div class="slide theme-css" data-index="29">
+  <h2>📐 display 属性</h2>
+  <table>
+    <tr><th>值</th><th>说明</th><th>特点</th></tr>
+    <tr><td>block</td><td>块级元素</td><td>独占一行，可设宽高</td></tr>
+    <tr><td>inline</td><td>行内元素</td><td>不换行，宽高无效</td></tr>
+    <tr><td>inline-block</td><td>行内块</td><td>不换行，可设宽高</td></tr>
+    <tr><td>none</td><td>隐藏</td><td>不占据空间</td></tr>
+    <tr><td>flex</td><td>弹性布局</td><td>一维布局利器</td></tr>
+    <tr><td>grid</td><td>网格布局</td><td>二维布局利器</td></tr>
+  </table>
+  <div class="code-block">/* visibility: hidden 与 display: none 的区别 */
+.hidden-a { display: none; }       /* 不占空间 */
+.hidden-b { visibility: hidden; }  /* 占据空间但不可见 */</div>
+</div>
+
+<!-- ==================== Slide 31: Position ==================== -->
+<div class="slide theme-css" data-index="30">
+  <h2>📌 position 定位</h2>
+  <table>
+    <tr><th>值</th><th>说明</th></tr>
+    <tr><td>static</td><td>默认值，正常文档流</td></tr>
+    <tr><td>relative</td><td>相对自身原位置偏移，仍占据原空间</td></tr>
+    <tr><td>absolute</td><td>相对于最近的非 static 祖先定位，脱离文档流</td></tr>
+    <tr><td>fixed</td><td>相对于浏览器视口定位，不随页面滚动</td></tr>
+    <tr><td>sticky</td><td>滚动到阈值前为 relative，之后为 fixed</td></tr>
+  </table>
+  <div class="code-block">.tooltip {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.navbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 999;
+}</div>
+</div>
+
+<!-- ==================== Slide 32: Float ==================== -->
+<div class="slide theme-css" data-index="31">
+  <h2>🌊 float 浮动</h2>
+  <div class="code-block">/* 基本浮动 */
+.img-left  { float: left;  margin-right: 16px; }
+.img-right { float: right; margin-left: 16px; }
+
+/* 清除浮动 — clearfix 技巧 */
+.clearfix::after {
+    content: "";
+    display: block;
+    clear: both;
+}</div>
+  <ul>
+    <li>浮动元素脱离文档流，后续内容会<strong>环绕</strong>浮动元素</li>
+    <li>父元素可能出现<strong>高度塌陷</strong>问题</li>
+    <li>使用 <code>clearfix</code> 或 <code>overflow: hidden</code> 解决</li>
+    <li>⚠️ 现代布局推荐使用 <strong>Flexbox</strong> 或 <strong>Grid</strong> 替代 float</li>
+  </ul>
+</div>
+
+<!-- ==================== Slide 33: Flexbox ==================== -->
+<div class="slide theme-css" data-index="32">
+  <h2>💪 Flexbox 弹性布局</h2>
+  <div class="code-block">/* 容器属性 */
+.container {
+    display: flex;
+    flex-direction: row;        /* row | column | row-reverse | column-reverse */
+    justify-content: center;    /* 主轴对齐：flex-start | center | space-between | space-around */
+    align-items: center;        /* 交叉轴对齐：stretch | flex-start | center | flex-end */
+    flex-wrap: wrap;            /* 换行：nowrap | wrap */
+    gap: 16px;                  /* 间距 */
+}
+
+/* 子项属性 */
+.item {
+    flex: 1;                    /* 占据剩余空间 */
+    flex-grow: 1;               /* 放大比例 */
+    flex-shrink: 0;             /* 缩小比例 */
+    flex-basis: 200px;          /* 初始大小 */
+    align-self: flex-end;       /* 覆盖交叉轴对齐 */
+    order: -1;                  /* 排序 */
+}</div>
+</div>
+
+<!-- ==================== Slide 34: Flexbox Practice ==================== -->
+<div class="slide theme-css" data-index="33">
+  <h2>💪 Flexbox 常见布局实战</h2>
+  <div class="columns">
+    <div class="col">
+      <h3>水平垂直居中</h3>
+      <div class="code-block">.center-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}</div>
+      <h3 style="margin-top:10px">等分布局</h3>
+      <div class="code-block">.equal {
+  display: flex;
+}
+.equal > div {
+  flex: 1;
+}</div>
+    </div>
+    <div class="col">
+      <h3>导航栏</h3>
+      <div class="code-block">.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}</div>
+      <h3 style="margin-top:10px">底部固定</h3>
+      <div class="code-block">.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.main { flex: 1; }</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Slide 35: Grid ==================== -->
+<div class="slide theme-css" data-index="34">
+  <h2>📐 Grid 网格布局</h2>
+  <div class="code-block">/* 容器属性 */
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;    /* 三列：比例 1:2:1 */
+    grid-template-rows: auto 1fr auto;      /* 三行 */
+    gap: 16px;                              /* 行列间距 */
+    grid-template-areas:
+        "header header header"
+        "sidebar main  aside"
+        "footer footer footer";
+}
+
+/* 子项属性 */
+.header  { grid-area: header; }
+.sidebar { grid-area: sidebar; }
+.main    { grid-area: main; }
+.aside   { grid-area: aside; }
+.footer  { grid-area: footer; }</div>
+</div>
+
+<!-- ==================== Slide 36: Grid Practice ==================== -->
+<div class="slide theme-css" data-index="35">
+  <h2>📐 Grid 实战</h2>
+  <div class="columns">
+    <div class="col">
+      <h3>卡片网格</h3>
+      <div class="code-block">.cards {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fill,
+      minmax(280px, 1fr));
+  gap: 20px;
+}</div>
+      <h3 style="margin-top:10px">固定列数</h3>
+      <div class="code-block">.grid-3 {
+  display: grid;
+  grid-template-columns:
+    repeat(3, 1fr);
+  gap: 16px;
+}</div>
+    </div>
+    <div class="col">
+      <h3>跨行跨列</h3>
+      <div class="code-block">.feature {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+/* 指定位置 */
+.special {
+  grid-column: 1 / 3;
+  grid-row: 2 / 4;
+}</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Slide 37: Responsive ==================== -->
+<div class="slide theme-css" data-index="36">
+  <h2>📱 响应式设计</h2>
+  <p>让网页在不同屏幕尺寸上都有良好的显示效果：</p>
+  <div class="code-block">&lt;!-- 关键：设置 viewport --&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</div>
+  <ul>
+    <li><strong>流式布局</strong> — 使用百分比 / vw / vh 等相对单位</li>
+    <li><strong>弹性图片</strong> — <code>max-width: 100%</code></li>
+    <li><strong>媒体查询</strong> — 根据屏幕大小应用不同样式</li>
+    <li><strong>移动优先</strong> — 先写移动端样式，再用媒体查询增强</li>
+  </ul>
+  <table>
+    <tr><th>断点</th><th>设备</th></tr>
+    <tr><td>&lt; 576px</td><td>手机（竖屏）</td></tr>
+    <tr><td>576px – 768px</td><td>手机（横屏）/ 小平板</td></tr>
+    <tr><td>768px – 992px</td><td>平板</td></tr>
+    <tr><td>992px – 1200px</td><td>笔记本</td></tr>
+    <tr><td>&gt; 1200px</td><td>桌面显示器</td></tr>
+  </table>
+</div>
+
+<!-- ==================== Slide 38: Media Queries ==================== -->
+<div class="slide theme-css" data-index="37">
+  <h2>📱 媒体查询</h2>
+  <div class="code-block">/* 基本语法 */
+@media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main    { width: 100%; }
+}
+
+/* 移动优先写法 */
+.container { padding: 16px; }   /* 默认：移动端 */
+
+@media (min-width: 768px) {     /* 平板及以上 */
+    .container { padding: 24px; max-width: 720px; margin: 0 auto; }
+}
+
+@media (min-width: 1200px) {    /* 桌面 */
+    .container { max-width: 1140px; }
+}
+
+/* 组合条件 */
+@media (min-width: 768px) and (orientation: landscape) {
+    /* 横屏平板 */
+}
+
+/* 暗色模式 */
+@media (prefers-color-scheme: dark) {
+    body { background: #1a1a1a; color: #eee; }
+}</div>
+</div>
+
+<!-- ==================== Slide 39: Animation ==================== -->
+<div class="slide theme-css" data-index="38">
+  <h2>✨ CSS 动画与过渡</h2>
+  <div class="code-block">/* 过渡（Transition） */
+.btn {
+    background: #264de4;
+    transition: all 0.3s ease;      /* 属性 | 时长 | 缓动函数 */
+}
+.btn:hover {
+    background: #1a35a3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,.2);
+}
+
+/* 动画（Animation） */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.element {
+    animation: fadeIn 0.6s ease forwards;
+}
+
+/* transform 变换 */
+transform: rotate(45deg);
+transform: scale(1.2);
+transform: translateX(100px);
+transform: skew(10deg);</div>
+</div>
+
+<!-- ==================== Slide 40: CSS Summary ==================== -->
+<div class="slide theme-css" data-index="39">
+  <h2>✅ CSS 小结</h2>
+  <div class="columns">
+    <div class="col">
+      <h3>核心知识</h3>
+      <ul>
+        <li>选择器与优先级</li>
+        <li>盒模型（margin/padding/border）</li>
+        <li>display 与 position</li>
+        <li>Flexbox 弹性布局</li>
+        <li>Grid 网格布局</li>
+        <li>响应式 &amp; 媒体查询</li>
+        <li>过渡与动画</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>最佳实践</h3>
+      <ul>
+        <li>优先使用 <code>box-sizing: border-box</code></li>
+        <li>使用 Flexbox/Grid 替代 float 布局</li>
+        <li>移动优先设计</li>
+        <li>合理使用 CSS 变量</li>
+        <li>避免过深的选择器嵌套</li>
+        <li>使用 BEM 命名规范</li>
+      </ul>
+    </div>
+  </div>
+  <p style="text-align:center;margin-top:20px;font-size:1.3em">接下来进入 <span class="tag tag-js">JavaScript</span> 部分 →</p>
+</div>
+
+<!-- ==================== Slide 41: What is JS ==================== -->
+<div class="slide theme-js" data-index="40">
+  <h2>⚡ 什么是 JavaScript？</h2>
+  <ul>
+    <li><strong>JavaScript</strong> 是网页的编程语言，赋予网页<strong>交互能力</strong></li>
+    <li>HTML 是骨架，CSS 是皮肤，<strong>JS 是大脑和肌肉</strong></li>
+    <li>可以操作 DOM、处理事件、发送网络请求、制作动画等</li>
+    <li>不仅用于浏览器：Node.js 可以在服务器端运行 JS</li>
+  </ul>
+  <div class="code-block">// 在控制台输出
+console.log("Hello, JavaScript!");
+
+// 弹出对话框
+alert("欢迎学习 JavaScript！");
+
+// 修改页面内容
+document.querySelector("h1").textContent = "动态修改的标题";</div>
+</div>
+
+<!-- ==================== Slide 42: JS Import ==================== -->
+<div class="slide theme-js" data-index="41">
+  <h2>📎 JavaScript 引入方式</h2>
+  <div class="code-block">&lt;!-- 1. 内联脚本 --&gt;
+&lt;button onclick="alert('点击了！')"&gt;按钮&lt;/button&gt;
+
+&lt;!-- 2. 内部脚本 --&gt;
+&lt;script&gt;
+  console.log("内部脚本");
+&lt;/script&gt;
+
+&lt;!-- 3. 外部脚本（推荐） --&gt;
+&lt;script src="app.js"&gt;&lt;/script&gt;
+
+&lt;!-- 4. defer：HTML 解析完毕后执行 --&gt;
+&lt;script src="app.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- 5. async：下载完立即执行 --&gt;
+&lt;script src="analytics.js" async&gt;&lt;/script&gt;</div>
+  <p>⚠️ 推荐将 <code>&lt;script&gt;</code> 放在 <code>&lt;/body&gt;</code> 前，或使用 <code>defer</code></p>
+</div>
+
+<!-- ==================== Slide 43: Variables & Types ==================== -->
+<div class="slide theme-js" data-index="42">
+  <h2>📦 变量与数据类型</h2>
+  <div class="code-block">// 声明变量
+let   name  = "小明";        // 可重新赋值
+const PI    = 3.14159;       // 常量，不可重新赋值
+var   old   = "旧写法";      // 函数作用域（不推荐）
+
+// 7 种基本类型
+let str     = "字符串";       // String
+let num     = 42;            // Number
+let bool    = true;          // Boolean
+let empty   = null;          // Null
+let notSet;                  // Undefined
+let sym     = Symbol("id");  // Symbol
+let big     = 9007199254740991n; // BigInt
+
+// 引用类型
+let arr     = [1, 2, 3];     // Array
+let obj     = { name: "小明", age: 25 }; // Object
+
+// 检查类型
+typeof str;   // "string"
+typeof arr;   // "object"（数组也是对象）
+Array.isArray(arr); // true</div>
+</div>
+
+<!-- ==================== Slide 44: Operators ==================== -->
+<div class="slide theme-js" data-index="43">
+  <h2>🔢 运算符</h2>
+  <div class="code-block">// 算术运算符
+5 + 3    // 8
+10 - 4   // 6
+3 * 4    // 12
+10 / 3   // 3.333...
+10 % 3   // 1（取余）
+2 ** 3   // 8（幂运算）
+
+// 比较运算符
+5 == "5"   // true  （宽松比较，会类型转换）
+5 === "5"  // false （严格比较，推荐使用）
+5 !== "5"  // true
+
+// 逻辑运算符
+true && false  // false（与）
+true || false  // true （或）
+!true          // false（非）
+
+// 空值合并 & 可选链
+let val = null ?? "默认值";  // "默认值"
+let len = user?.address?.city; // 安全访问嵌套属性</div>
+</div>
+
+<!-- ==================== Slide 45: Conditionals ==================== -->
+<div class="slide theme-js" data-index="44">
+  <h2>🔀 条件语句</h2>
+  <div class="code-block">// if...else
+let score = 85;
+if (score >= 90) {
+    console.log("优秀");
+} else if (score >= 60) {
+    console.log("及格");
+} else {
+    console.log("不及格");
+}
+
+// 三元运算符
+let result = score >= 60 ? "及格" : "不及格";
+
+// switch
+let day = "Monday";
+switch (day) {
+    case "Monday":
+        console.log("星期一");
+        break;
+    case "Friday":
+        console.log("星期五");
+        break;
+    default:
+        console.log("其他日子");
+}</div>
+</div>
+
+<!-- ==================== Slide 46: Loops ==================== -->
+<div class="slide theme-js" data-index="45">
+  <h2>🔄 循环语句</h2>
+  <div class="code-block">// for 循环
+for (let i = 0; i &lt; 5; i++) {
+    console.log(i);  // 0, 1, 2, 3, 4
+}
+
+// while 循环
+let count = 0;
+while (count &lt; 3) {
+    console.log(count++);  // 0, 1, 2
+}
+
+// for...of（遍历可迭代对象的值）
+let fruits = ["苹果", "香蕉", "橙子"];
+for (let fruit of fruits) {
+    console.log(fruit);
+}
+
+// for...in（遍历对象的键）
+let person = { name: "小明", age: 25 };
+for (let key in person) {
+    console.log(key, person[key]);
+}
+
+// forEach
+fruits.forEach((fruit, index) => {
+    console.log(index, fruit);
+});</div>
+</div>
+
+<!-- ==================== Slide 47: Functions ==================== -->
+<div class="slide theme-js" data-index="46">
+  <h2>🔧 函数</h2>
+  <div class="code-block">// 函数声明
+function greet(name) {
+    return `你好，${name}！`;
+}
+
+// 函数表达式
+const add = function(a, b) {
+    return a + b;
+};
+
+// 箭头函数（ES6）
+const multiply = (a, b) => a * b;
+const square   = x => x * x;
+
+// 默认参数
+function sayHi(name = "朋友") {
+    console.log(`你好，${name}！`);
+}
+
+// 剩余参数
+function sum(...numbers) {
+    return numbers.reduce((acc, n) => acc + n, 0);
+}
+sum(1, 2, 3, 4);  // 10</div>
+</div>
+
+<!-- ==================== Slide 48: Arrays ==================== -->
+<div class="slide theme-js" data-index="47">
+  <h2>📋 数组</h2>
+  <div class="code-block">// 创建
+let arr = [1, 2, 3, 4, 5];
+let arr2 = new Array(3);       // [empty × 3]
+let arr3 = Array.from("hello"); // ["h","e","l","l","o"]
+
+// 访问与修改
+arr[0];         // 1
+arr[2] = 99;    // [1, 2, 99, 4, 5]
+arr.length;     // 5
+
+// 增删方法
+arr.push(6);       // 末尾添加
+arr.pop();         // 末尾删除
+arr.unshift(0);    // 开头添加
+arr.shift();       // 开头删除
+arr.splice(1, 2);  // 从索引1删除2个元素
+
+// 查找
+arr.indexOf(3);        // 索引
+arr.includes(3);       // true/false
+arr.find(x => x > 3);  // 第一个匹配
+arr.findIndex(x => x > 3);</div>
+</div>
+
+<!-- ==================== Slide 49: Objects ==================== -->
+<div class="slide theme-js" data-index="48">
+  <h2>🏠 对象</h2>
+  <div class="code-block">// 创建对象
+let person = {
+    name: "小明",
+    age: 25,
+    hobbies: ["编程", "读书"],
+    greet() {
+        return `我叫${this.name}，今年${this.age}岁`;
+    }
+};
+
+// 访问属性
+person.name;          // 点号访问
+person["age"];        // 方括号访问
+
+// 修改 / 添加属性
+person.email = "test@example.com";
+person.age = 26;
+
+// 删除属性
+delete person.email;
+
+// 解构赋值
+let { name, age } = person;
+
+// 展开运算符
+let copy = { ...person, city: "北京" };
+
+// 常用方法
+Object.keys(person);    // ["name", "age", "hobbies", "greet"]
+Object.values(person);
+Object.entries(person);</div>
+</div>
+
+<!-- ==================== Slide 50: DOM ==================== -->
+<div class="slide theme-js" data-index="49">
+  <h2>🌳 DOM 操作</h2>
+  <div class="code-block">// 获取元素
+document.getElementById("app");
+document.querySelector(".card");        // 第一个匹配
+document.querySelectorAll(".item");     // 所有匹配（NodeList）
+
+// 修改内容
+el.textContent = "纯文本";
+el.innerHTML   = "&lt;strong&gt;HTML 内容&lt;/strong&gt;";
+
+// 修改样式
+el.style.color = "red";
+el.style.fontSize = "20px";
+el.classList.add("active");
+el.classList.remove("active");
+el.classList.toggle("active");
+
+// 修改属性
+el.setAttribute("data-id", "123");
+el.getAttribute("href");
+
+// 创建与插入
+let div = document.createElement("div");
+div.textContent = "新元素";
+document.body.appendChild(div);
+parent.insertBefore(div, referenceNode);
+
+// 删除
+el.remove();
+parent.removeChild(child);</div>
+</div>
+
+<!-- ==================== Slide 51: Events ==================== -->
+<div class="slide theme-js" data-index="50">
+  <h2>🖱️ 事件处理</h2>
+  <div class="code-block">// 添加事件监听器（推荐方式）
+let btn = document.querySelector("#myBtn");
+
+btn.addEventListener("click", function(event) {
+    console.log("按钮被点击了！");
+    console.log("点击位置：", event.clientX, event.clientY);
+});
+
+// 箭头函数写法
+btn.addEventListener("click", (e) => {
+    e.target.style.background = "green";
+});
+
+// 移除事件
+function handleClick() { console.log("clicked"); }
+btn.addEventListener("click", handleClick);
+btn.removeEventListener("click", handleClick);
+
+// 事件委托（利用冒泡机制）
+document.querySelector("ul").addEventListener("click", (e) => {
+    if (e.target.tagName === "LI") {
+        console.log("点击了：", e.target.textContent);
+    }
+});</div>
+</div>
+
+<!-- ==================== Slide 52: Event Types ==================== -->
+<div class="slide theme-js" data-index="51">
+  <h2>🖱️ 常用事件类型</h2>
+  <table>
+    <tr><th>类别</th><th>事件</th><th>说明</th></tr>
+    <tr><td>鼠标</td><td>click / dblclick</td><td>单击 / 双击</td></tr>
+    <tr><td></td><td>mouseenter / mouseleave</td><td>鼠标进入 / 离开</td></tr>
+    <tr><td></td><td>mousemove</td><td>鼠标移动</td></tr>
+    <tr><td>键盘</td><td>keydown / keyup</td><td>按键按下 / 松开</td></tr>
+    <tr><td>表单</td><td>input</td><td>输入内容变化</td></tr>
+    <tr><td></td><td>change</td><td>值改变（失焦后触发）</td></tr>
+    <tr><td></td><td>submit</td><td>表单提交</td></tr>
+    <tr><td></td><td>focus / blur</td><td>获得 / 失去焦点</td></tr>
+    <tr><td>窗口</td><td>load</td><td>页面加载完成</td></tr>
+    <tr><td></td><td>resize</td><td>窗口大小改变</td></tr>
+    <tr><td></td><td>scroll</td><td>页面滚动</td></tr>
+    <tr><td>触摸</td><td>touchstart / touchend</td><td>触摸开始 / 结束</td></tr>
+  </table>
+</div>
+
+<!-- ==================== Slide 53: String Methods ==================== -->
+<div class="slide theme-js" data-index="52">
+  <h2>🔤 字符串方法</h2>
+  <div class="code-block">let str = "Hello, JavaScript!";
+
+// 基本操作
+str.length;              // 18
+str.charAt(0);           // "H"
+str[0];                  // "H"
+
+// 搜索
+str.indexOf("Java");     // 7
+str.includes("Java");    // true
+str.startsWith("Hello"); // true
+str.endsWith("!");       // true
+
+// 截取
+str.slice(7, 17);        // "JavaScript"
+str.substring(0, 5);     // "Hello"
+
+// 转换
+str.toUpperCase();       // "HELLO, JAVASCRIPT!"
+str.toLowerCase();       // "hello, javascript!"
+str.trim();              // 去除首尾空格
+str.replace("Java", "Type"); // "Hello, TypeScript!"
+str.split(", ");         // ["Hello", "JavaScript!"]
+
+// 模板字符串（ES6）
+let name = "小明";
+let msg = `你好，${name}，今天是 ${new Date().toLocaleDateString()}`;</div>
+</div>
+
+<!-- ==================== Slide 54: Array Methods ==================== -->
+<div class="slide theme-js" data-index="53">
+  <h2>📋 数组高级方法</h2>
+  <div class="code-block">let nums = [1, 2, 3, 4, 5];
+
+// map — 映射，返回新数组
+let doubled = nums.map(n => n * 2);       // [2, 4, 6, 8, 10]
+
+// filter — 过滤
+let evens = nums.filter(n => n % 2 === 0); // [2, 4]
+
+// reduce — 归约
+let total = nums.reduce((sum, n) => sum + n, 0); // 15
+
+// sort — 排序（会修改原数组）
+let sorted = [...nums].sort((a, b) => b - a); // [5,4,3,2,1]
+
+// find / findIndex
+nums.find(n => n > 3);       // 4
+nums.findIndex(n => n > 3);  // 3
+
+// some / every
+nums.some(n => n > 4);    // true（至少一个满足）
+nums.every(n => n > 0);   // true（全部满足）
+
+// flat — 扁平化
+[[1,2],[3,[4,5]]].flat(Infinity); // [1,2,3,4,5]
+
+// 链式调用
+let result = nums
+    .filter(n => n > 1)
+    .map(n => n * 10)
+    .reduce((s, n) => s + n, 0); // 140</div>
+</div>
+
+<!-- ==================== Slide 55: ES6+ ==================== -->
+<div class="slide theme-js" data-index="54">
+  <h2>🆕 ES6+ 新特性</h2>
+  <div class="code-block">// 1. 解构赋值
+let [a, b, ...rest] = [1, 2, 3, 4, 5]; // a=1, b=2, rest=[3,4,5]
+let { name, age }   = { name: "小明", age: 25 };
+
+// 2. 展开运算符
+let arr = [...arr1, ...arr2];
+let obj = { ...obj1, ...obj2, extra: true };
+
+// 3. 模板字符串
+let html = `&lt;div class="card"&gt;
+  &lt;h2&gt;${title}&lt;/h2&gt;
+  &lt;p&gt;${content}&lt;/p&gt;
+&lt;/div&gt;`;
+
+// 4. Map 与 Set
+let map = new Map();
+map.set("key", "value");
+let set = new Set([1, 2, 2, 3]); // {1, 2, 3}
+
+// 5. for...of
+for (let [key, val] of map) { console.log(key, val); }
+
+// 6. 类（Class）
+class Animal {
+    constructor(name) { this.name = name; }
+    speak() { return `${this.name} makes a sound`; }
+}
+class Dog extends Animal {
+    speak() { return `${this.name} barks`; }
+}</div>
+</div>
+
+<!-- ==================== Slide 56: Promise & Async ==================== -->
+<div class="slide theme-js" data-index="55">
+  <h2>⏳ Promise 与异步编程</h2>
+  <div class="code-block">// 回调地狱 ❌
+getData(function(a) {
+    getMore(a, function(b) {
+        getDetail(b, function(c) { /* ... */ });
+    });
+});
+
+// Promise ✅
+function fetchData() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => resolve("数据加载完成"), 1000);
+    });
+}
+fetchData()
+    .then(data => console.log(data))
+    .catch(err => console.error(err));
+
+// async / await（推荐）✅✅
+async function loadData() {
+    try {
+        let data = await fetchData();
+        console.log(data);
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+// Promise 并发
+Promise.all([fetch(url1), fetch(url2)]);
+Promise.race([fetch(url1), fetch(url2)]);</div>
+</div>
+
+<!-- ==================== Slide 57: Fetch API ==================== -->
+<div class="slide theme-js" data-index="56">
+  <h2>🌐 Fetch API</h2>
+  <div class="code-block">// GET 请求
+async function getUsers() {
+    let response = await fetch("https://api.example.com/users");
+    let data = await response.json();
+    console.log(data);
+}
+
+// POST 请求
+async function createUser(user) {
+    let response = await fetch("https://api.example.com/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(user)
+    });
+    let result = await response.json();
+    return result;
+}
+
+// 错误处理
+async function safeFetch(url) {
+    try {
+        let res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+    } catch (err) {
+        console.error("请求失败：", err.message);
+    }
+}</div>
+</div>
+
+<!-- ==================== Slide 58: Local Storage ==================== -->
+<div class="slide theme-js" data-index="57">
+  <h2>💾 本地存储</h2>
+  <div class="code-block">// localStorage — 持久存储（关闭浏览器后仍保留）
+localStorage.setItem("username", "小明");
+let name = localStorage.getItem("username"); // "小明"
+localStorage.removeItem("username");
+localStorage.clear();   // 清空所有
+
+// 存储对象（需 JSON 序列化）
+let user = { name: "小明", age: 25 };
+localStorage.setItem("user", JSON.stringify(user));
+let saved = JSON.parse(localStorage.getItem("user"));
+
+// sessionStorage — 会话存储（关闭标签页后清除）
+sessionStorage.setItem("token", "abc123");
+sessionStorage.getItem("token");
+
+// Cookie（适合小数据，可设过期时间）
+document.cookie = "theme=dark; max-age=86400; path=/";
+</div>
+  <table>
+    <tr><th>方式</th><th>容量</th><th>生命周期</th><th>随请求发送</th></tr>
+    <tr><td>localStorage</td><td>~5MB</td><td>永久</td><td>否</td></tr>
+    <tr><td>sessionStorage</td><td>~5MB</td><td>会话</td><td>否</td></tr>
+    <tr><td>Cookie</td><td>~4KB</td><td>可设置</td><td>是</td></tr>
+  </table>
+</div>
+
+<!-- ==================== Slide 59: JS Practice ==================== -->
+<div class="slide theme-js" data-index="58">
+  <h2>💻 JS 实战：待办事项应用</h2>
+  <div class="code-block">// HTML: &lt;input id="input"&gt; &lt;button id="addBtn"&gt;添加&lt;/button&gt; &lt;ul id="list"&gt;&lt;/ul&gt;
+
+const input  = document.getElementById("input");
+const addBtn = document.getElementById("addBtn");
+const list   = document.getElementById("list");
+
+// 从 localStorage 加载
+let todos = JSON.parse(localStorage.getItem("todos")) || [];
+
+function render() {
+    list.innerHTML = todos.map((todo, i) => `
+        &lt;li class="${todo.done ? 'done' : ''}"&gt;
+            &lt;span onclick="toggle(${i})"&gt;${todo.text}&lt;/span&gt;
+            &lt;button onclick="remove(${i})"&gt;删除&lt;/button&gt;
+        &lt;/li&gt;
+    `).join("");
+    localStorage.setItem("todos", JSON.stringify(todos));
+}
+
+function addTodo() {
+    if (!input.value.trim()) return;
+    todos.push({ text: input.value, done: false });
+    input.value = "";
+    render();
+}
+
+function toggle(i) { todos[i].done = !todos[i].done; render(); }
+function remove(i) { todos.splice(i, 1); render(); }
+
+addBtn.addEventListener("click", addTodo);
+input.addEventListener("keydown", e => e.key === "Enter" && addTodo());
+render();</div>
+</div>
+
+<!-- ==================== Slide 60: Summary ==================== -->
+<div class="slide theme-summary" data-index="59">
+  <h2>🎉 总结与展望</h2>
+  <div class="columns">
+    <div class="col">
+      <h3>本课程回顾</h3>
+      <ul>
+        <li><span class="tag tag-html">HTML</span> 网页结构与内容</li>
+        <li><span class="tag tag-css">CSS</span> 样式、布局与动画</li>
+        <li><span class="tag tag-js">JS</span> 交互、逻辑与数据</li>
+      </ul>
+      <h3 style="margin-top:16px">学习建议</h3>
+      <ul>
+        <li>多动手写代码、做项目</li>
+        <li>善用开发者工具 (F12)</li>
+        <li>参考 MDN 文档</li>
+        <li>参与开源社区</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>下一步学习</h3>
+      <ul>
+        <li>CSS 预处理器 (Sass / Less)</li>
+        <li>前端框架 (Vue / React / Angular)</li>
+        <li>TypeScript</li>
+        <li>构建工具 (Vite / Webpack)</li>
+        <li>Node.js 后端开发</li>
+        <li>Git 版本控制</li>
+        <li>前端工程化与性能优化</li>
+      </ul>
+    </div>
+  </div>
+  <p style="text-align:center;margin-top:20px;font-size:1.3em">🚀 祝你前端学习之旅愉快！</p>
+</div>
+
+</div><!-- #slides -->
+
+<!-- Navigation -->
+<div id="nav">
+  <button id="prevBtn" aria-label="上一页">◀</button>
+  <span id="counter">1 / 60</span>
+  <button id="nextBtn" aria-label="下一页">▶</button>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var slides   = document.querySelectorAll(".slide");
+  var total    = slides.length;
+  var current  = 0;
+  var counter  = document.getElementById("counter");
+  var progress = document.getElementById("progress");
+  var prevBtn  = document.getElementById("prevBtn");
+  var nextBtn  = document.getElementById("nextBtn");
+
+  function goTo(index) {
+    if (index < 0 || index >= total) return;
+    slides[current].classList.remove("active");
+    slides[current].classList.add("prev");
+    setTimeout(function () { slides[current].classList.remove("prev"); }, 500);
+    current = index;
+    slides[current].classList.add("active");
+    counter.textContent = (current + 1) + " / " + total;
+    progress.style.width = ((current + 1) / total * 100) + "%";
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+    // Save position
+    try { sessionStorage.setItem("slideIndex", current); } catch (e) { console.warn("sessionStorage unavailable:", e); }
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  // Keyboard navigation
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === " ") {
+      e.preventDefault(); next();
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      e.preventDefault(); prev();
+    } else if (e.key === "Home") {
+      e.preventDefault(); goTo(0);
+    } else if (e.key === "End") {
+      e.preventDefault(); goTo(total - 1);
+    }
+  });
+
+  // Button navigation
+  prevBtn.addEventListener("click", prev);
+  nextBtn.addEventListener("click", next);
+
+  var MIN_SWIPE_DISTANCE = 50;
+
+  // Touch / swipe support
+  var touchStartX = 0;
+  var touchStartY = 0;
+  document.addEventListener("touchstart", function (e) {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  });
+  document.addEventListener("touchend", function (e) {
+    var dx = e.changedTouches[0].screenX - touchStartX;
+    var dy = e.changedTouches[0].screenY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > MIN_SWIPE_DISTANCE) {
+      if (dx < 0) next(); else prev();
+    }
+  });
+
+  // Restore position
+  try {
+    var saved = parseInt(sessionStorage.getItem("slideIndex"), 10);
+    if (!isNaN(saved) && saved >= 0 && saved < total) {
+      slides[0].classList.remove("active");
+      goTo(saved);
+    }
+  } catch (e) {}
+
+  // Initial state
+  progress.style.width = ((current + 1) / total * 100) + "%";
+  prevBtn.disabled = current === 0;
+})();
+</script>
+</body>
+</html>
